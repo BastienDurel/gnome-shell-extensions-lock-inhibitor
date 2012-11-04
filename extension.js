@@ -24,7 +24,7 @@ function _hideMsg() {
 function _showMsg(msg) {
     _hideMsg();
     if (!text) {
-        text = new St.Label({ style_class: 'helloworld-label', text: msg });
+        text = new St.Label({ style_class: 'msg-label', text: msg });
         Main.uiGroup.add_actor(text);
     }
 
