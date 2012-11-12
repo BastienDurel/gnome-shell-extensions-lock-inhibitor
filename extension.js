@@ -67,7 +67,7 @@ function _toggle() {
             tmp += 'powersettings ok ';
         } catch (e) {}
         button.get_child(0).icon_name = EnabledIcon;
-        _showMsg("Set idle to " + _lastval + ' [' + tmp + ']');
+        _showMsg("Set idle to " + _lastval);
     }
     else {
         _lastval = cur;
@@ -84,7 +84,7 @@ function _toggle() {
             tmp += 'screensettings ok ';
         } catch (e) {}
         button.get_child(0).icon_name = DisabledIcon;
-        _showMsg("Disable idle " + ' [' + tmp + ']');
+        _showMsg("Disable idle ");
     }
 }
 
