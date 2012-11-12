@@ -10,10 +10,16 @@ const Convenience = Me.imports.convenience;
 
 const SCHEMA = 'org.gnome.desktop.session';
 const KEY = 'idle-delay';
+const POWER_SCHEMA = 'org.gnome.settings-daemon.plugins.power';
+//const POWER_KEY = 'active';
+const POWER_KEY = 'sleep-inactive-ac-timeout';
+const SCREEN_SCHEMA = 'org.gnome.desktop.screensaver';
+const SCREEN_KEY = 'idle-activation-enabled';
+
 const EnabledIcon = 'preferences-desktop-screensaver-symbolic';
 const DisabledIcon = 'action-unavailable-symbolic';
 
-let text, button, _lastval, _settings;
+let text, button, _lastval, _settings, _powersettings, _screensettings;
 
 function _hideMsg() {
     if (text != null)
@@ -43,24 +49,49 @@ function _showMsg(msg) {
 }
 
 function _toggle() {
-	let cur = _settings.get_uint(KEY);
+    let cur = _settings.get_uint(KEY);
+    let tmp = '';
     if (cur == 0 || cur == undefined) {
         if (_lastval == 0 || _lastval == undefined)
             _lastval = 600;
-        _showMsg("Set idle to " + _lastval);
-        _settings.set_uint(KEY, _lastval);
+        try {
+            _settings.set_uint(KEY, _lastval);
+            tmp += 'settings ok ';
+        } catch (e) {}
+        try {
+            _screensettings.set_boolean(SCREEN_KEY, true);
+            tmp += 'screensettings ok ';
+        } catch (e) {}
+        try {
+            _powersettings.set_int(POWER_KEY, _lastval);
+            tmp += 'powersettings ok ';
+        } catch (e) {}
         button.get_child(0).icon_name = EnabledIcon;
+        _showMsg("Set idle to " + _lastval + ' [' + tmp + ']');
     }
     else {
         _lastval = cur;
-        _showMsg("Disable idle ");
-        _settings.set_uint(KEY, 0);
+        try {
+            _settings.set_uint(KEY, 0);
+            tmp += 'screensettings ok ';
+        } catch (e) {}
+        try {
+            _screensettings.set_boolean(SCREEN_KEY, false);
+            tmp += 'screensettings ok ';
+        } catch (e) {}
+        try {
+            _powersettings.set_int(POWER_KEY, 0);
+            tmp += 'screensettings ok ';
+        } catch (e) {}
         button.get_child(0).icon_name = DisabledIcon;
+        _showMsg("Disable idle " + ' [' + tmp + ']');
     }
 }
 
 function init() {
     _settings = Convenience.getSettings(SCHEMA);
+    _powersettings = Convenience.getSettings(POWER_SCHEMA);
+    _screensettings = Convenience.getSettings(SCREEN_SCHEMA);
 
     button = new St.Bin({ style_class: 'panel-button',
                           reactive: true,
