@@ -11,9 +11,7 @@ const Convenience = Me.imports.convenience;
 const SCHEMA = 'org.gnome.desktop.session';
 const KEY = 'idle-delay';
 const POWER_SCHEMA = 'org.gnome.settings-daemon.plugins.power';
-//const POWER_KEY = 'active';
-const POWER_KEY = 'sleep-inactive-ac-timeout';
-const POWER_KEY2 = 'sleep-display-ac';
+const POWER_KEY = 'sleep-display-ac';
 const SCREEN_SCHEMA = 'org.gnome.desktop.screensaver';
 const SCREEN_KEY = 'idle-activation-enabled';
 
@@ -65,7 +63,6 @@ function _toggle() {
         } catch (e) {}
         try {
             _powersettings.set_int(POWER_KEY, _lastval);
-            _powersettings.set_int(POWER_KEY2, _lastval);
             tmp += 'powersettings ok ';
         } catch (e) {}
         button.get_child(0).icon_name = EnabledIcon;
@@ -83,7 +80,6 @@ function _toggle() {
         } catch (e) {}
         try {
             _powersettings.set_int(POWER_KEY, 0);
-            _powersettings.set_int(POWER_KEY2, 0);
             tmp += 'screensettings ok ';
         } catch (e) {}
         button.get_child(0).icon_name = DisabledIcon;
